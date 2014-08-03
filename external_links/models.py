@@ -4,9 +4,17 @@ from django.core.validators import validate_ipv46_address
 
 from django.db import models
 
-from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
 from django.core.cache import cache
+
+try:
+    from django.contrib.auth import get_user_model
+except ImportError: # django < 1.5
+    from django.contrib.auth.models import User
+else:
+    User = get_user_model()
+
+
 
 BLOCKED_IPS_LIST = 'external-link:blocked-ips'
 
