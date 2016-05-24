@@ -37,7 +37,13 @@ class LinkClick(models.Model):
         """
         Update params based on Request object
         """
-        ip_addr = request.META['REMOTE_ADDR']
+        try:
+            ip_addr = request.META["HTTP_X_FORWARDED_FOR"]
+        except KeyError:
+            try:
+                ip_addr = request.META['REMOTE_ADDR']
+            except KeyError:
+                ip_addr = None
 
         if ip_addr in BlockedIp.objects.get_ips():
             # If it's a blocked IP, dont do anything 
